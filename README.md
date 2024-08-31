@@ -10,5 +10,5 @@ Este projeto é um backend desenvolvido em Spring Boot utilizando Maven como fer
 - **Arquitetura Hexagonal**: Estrutura o projeto para garantir que a lógica de negócios permaneça isolada de preocupações externas (como persistência e comunicação).
 
 # Testes
-Testes Unitários: Validação dos componentes individuais, garantindo que cada parte do sistema funcione corretamente de forma isolada.
-Testes de Integração: Verificação do funcionamento correto da aplicação como um todo, integrando múltiplos componentes (ex: MongoDB e RabbitMQ).
+- **Testes Unitários**: Validação dos componentes individuais, garantindo que cada parte do sistema funcione corretamente de forma isolada.
+- **Testes de Integração**: Verificação do funcionamento correto da aplicação como um todo, integrando múltiplos componentes (ex: MongoDB e RabbitMQ).
