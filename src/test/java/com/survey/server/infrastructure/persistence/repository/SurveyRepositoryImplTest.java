@@ -35,6 +35,7 @@ public class SurveyRepositoryImplTest {
                         LocalDateTime.now(),
                         null,
                         false,
+                        List.of(),
                         List.of()
                 );
         SurveyModel surveyModel = new SurveyModel(survey);
@@ -57,6 +58,7 @@ public class SurveyRepositoryImplTest {
                         LocalDateTime.now(),
                         null,
                         false,
+                        List.of(),
                         List.of()
                 );
 
@@ -81,6 +83,7 @@ public class SurveyRepositoryImplTest {
                         LocalDateTime.now(),
                         null,
                         false,
+                        List.of(),
                         List.of()
                 );
 
@@ -105,6 +108,7 @@ public class SurveyRepositoryImplTest {
                         LocalDateTime.now(),
                         null,
                         false,
+                        List.of(),
                         List.of()
                 );
         SurveyModel surveyModel = new SurveyModel(survey);

@@ -13,17 +13,17 @@ public class Field {
     private FieldType type;
     private String helper;
     private Boolean required;
-    private List<Answer> answer;
+    private List<Answer> answers;
 
     public Field() {
     }
 
-    public Field(String id, String label, FieldType type, String helper, Boolean required, List<Answer> answer) {
+    public Field(String id, String label, FieldType type, String helper, Boolean required, List<Answer> answers) {
         this.id = id;
         this.label = label;
         this.type = type;
         this.helper = helper;
         this.required = required;
-        this.answer = answer;
+        this.answers = answers;
     }
 }

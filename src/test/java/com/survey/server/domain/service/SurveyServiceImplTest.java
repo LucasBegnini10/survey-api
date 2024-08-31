@@ -1,6 +1,7 @@
 package com.survey.server.domain.service;
 
 import com.survey.server.domain.exception.SurveyNotFoundException;
+import com.survey.server.domain.model.Answer;
 import com.survey.server.domain.model.Field;
 import com.survey.server.domain.model.FieldType;
 import com.survey.server.domain.model.Survey;
@@ -12,7 +13,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -37,6 +40,7 @@ public class SurveyServiceImplTest {
                         LocalDateTime.now(),
                         null,
                         false,
+                        List.of(),
                         List.of()
                 )
         );
@@ -58,6 +62,7 @@ public class SurveyServiceImplTest {
                 LocalDateTime.now(),
                 null,
                 false,
+                List.of(),
                 List.of()
         );
 
@@ -94,7 +99,8 @@ public class SurveyServiceImplTest {
                                 false,
                                 List.of()
                         )
-                )
+                ),
+                List.of()
         );
 
         Survey survey = new Survey(
@@ -114,7 +120,8 @@ public class SurveyServiceImplTest {
                                 false,
                                 List.of()
                         )
-                )
+                ),
+                List.of()
         );
 
         when(repository.save(any(Survey.class))).thenReturn(expected);
@@ -129,5 +136,42 @@ public class SurveyServiceImplTest {
         service.delete("id");
 
         verify(repository).deleteById("id");
+    }
+
+    @Test
+    public void should_SaveAnswer() {
+        Survey survey = new Survey(
+                "id",
+                "name",
+                "description",
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                null,
+                false,
+                List.of(
+                        new Field(
+                                "field-id",
+                                "name",
+                                FieldType.TEXT,
+                                null,
+                                false,
+                                new ArrayList<>()
+                        )
+                ),
+                null
+        );
+
+        List<Answer> answers = List.of(
+                new Answer(null, "answer1", "field-id"),
+                new Answer(null, "answer2", "field-id")
+        );
+
+        when(repository.findById(anyString())).thenReturn(Optional.of(survey));
+
+        service.saveAnswer("id", answers);
+
+        assertEquals(2, survey.getAnswers().size());
+        assertEquals(2, survey.getFields().get(0).getAnswers().size());
+        verify(repository).save(survey);
     }
 }

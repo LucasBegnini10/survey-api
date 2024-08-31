@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="Run DEV" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+        <module name="server" />
+        <option name="ACTIVE_PROFILES" value="dev" />
+        <option name="SPRING_BOOT_MAIN_CLASS" value="com.survey.server.ServerApplication" />
+        <shortenClasspath name="JAR_MANIFEST" />
+        <method v="2">
+            <option name="Make" enabled="true" />
+        </method>
+    </configuration>
+</component>

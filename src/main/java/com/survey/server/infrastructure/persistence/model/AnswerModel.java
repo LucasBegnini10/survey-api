@@ -16,15 +16,12 @@ import java.util.stream.Collectors;
 public class AnswerModel {
     private String _id;
     private String value;
-
-    public AnswerModel(AnswerModel answer){
-        this._id = answer.get_id();
-        this.value = answer.getValue();
-    }
+    private String fieldId;
 
     public AnswerModel(Answer answer){
         this._id = answer.getId();
         this.value = answer.getValue();
+        this.fieldId = answer.getFieldId();
     }
 
     public static List<AnswerModel> fromDomain(List<Answer> answers){
@@ -35,11 +32,13 @@ public class AnswerModel {
     public static Answer toDomain(AnswerModel answer){
         return new Answer(
                 answer._id,
-                answer.value
+                answer.value,
+                answer.fieldId
         );
     }
 
     public static List<Answer> toDomain(List<AnswerModel> answers){
+        if(answers == null) return List.of();
         return answers.stream().map(AnswerModel::toDomain).collect(Collectors.toList());
     }
 }

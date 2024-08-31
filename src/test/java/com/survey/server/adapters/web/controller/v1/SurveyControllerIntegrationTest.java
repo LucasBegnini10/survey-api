@@ -1,8 +1,11 @@
 package com.survey.server.adapters.web.controller.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.survey.server.adapters.web.dto.AnswerDTO;
+import com.survey.server.adapters.web.dto.AnswersDTO;
 import com.survey.server.adapters.web.dto.FieldDTO;
 import com.survey.server.adapters.web.dto.SurveyDTO;
+import com.survey.server.domain.model.Field;
 import com.survey.server.domain.model.FieldType;
 import com.survey.server.domain.model.Survey;
 import com.survey.server.domain.service.SurveyService;
@@ -22,6 +25,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -69,7 +73,6 @@ class SurveyControllerIntegrationTest {
 
     @Test
     void should_ReturnSurveys() throws Exception {
-        // Setup initial data
         Survey survey1 = new Survey(
                 null,
                 "Survey1",
@@ -78,6 +81,7 @@ class SurveyControllerIntegrationTest {
                 LocalDateTime.now(),
                 null,
                 false,
+                List.of(),
                 List.of()
         );
         Survey survey2 = new Survey(
@@ -88,13 +92,13 @@ class SurveyControllerIntegrationTest {
                 LocalDateTime.now(),
                 null,
                 false,
+                List.of(),
                 List.of()
         );
 
         surveyService.create(survey1);
         surveyService.create(survey2);
 
-        // Perform GET request
         mockMvc.perform(get("/v1/surveys")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -103,7 +107,6 @@ class SurveyControllerIntegrationTest {
 
     @Test
     void should_ReturnSurvey() throws Exception {
-        // Setup initial data
         Survey survey = new Survey(
                 "id",
                 "Survey1",
@@ -112,11 +115,11 @@ class SurveyControllerIntegrationTest {
                 LocalDateTime.now(),
                 null,
                 false,
+                List.of(),
                 List.of()
         );
         Survey surveyCreated = surveyService.create(survey);
 
-        // Perform GET request
         mockMvc.perform(get("/v1/surveys/{id}", surveyCreated.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -167,7 +170,7 @@ class SurveyControllerIntegrationTest {
                 )
         );
 
-         mockMvc.perform(post("/v1/surveys")
+        mockMvc.perform(post("/v1/surveys")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(surveyDTO)))
                 .andExpect(status().isBadRequest());
@@ -175,7 +178,6 @@ class SurveyControllerIntegrationTest {
 
     @Test
     void should_DeleteSurvey() throws Exception {
-        // Setup initial data
         Survey survey = new Survey(
                 "id",
                 "Survey1",
@@ -184,14 +186,63 @@ class SurveyControllerIntegrationTest {
                 LocalDateTime.now(),
                 null,
                 false,
+                List.of(),
                 List.of()
         );
         Survey surveyCreated = surveyService.create(survey);
 
-        // Perform DELETE request
         mockMvc.perform(delete("/v1/surveys/{id}", surveyCreated.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void should_AnswerSurvey() throws Exception {
+        Survey survey = new Survey(
+                "id",
+                "Survey1",
+                "description",
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                null,
+                false,
+                List.of(
+                        new Field(
+                                null,
+                                "name",
+                                FieldType.TEXT,
+                                null,
+                                false,
+                                new ArrayList<>()
+                        )
+                ),
+                List.of()
+        );
+
+        Survey surveyCreated = surveyService.create(survey);
+
+        AnswersDTO answersDTO = new AnswersDTO(
+                List.of(
+                        new AnswerDTO("value", surveyCreated.getFields().get(0).getId())
+                )
+        );
+
+
+        mockMvc.perform(post("/v1/surveys/{id}/answers", surveyCreated.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(answersDTO)))
+                .andExpect(status().isCreated());
+
+        // Async operation
+        Thread.sleep(1000);
+
+        mockMvc.perform(get("/v1/surveys/{id}", surveyCreated.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.answers").isNotEmpty())
+                .andExpect(jsonPath("$.answers").isArray())
+                .andExpect(jsonPath("$.answers[0].value").value("value"))
+                .andExpect(jsonPath("$.fields[0].answers[0].value").value("value"));
     }
 }
 

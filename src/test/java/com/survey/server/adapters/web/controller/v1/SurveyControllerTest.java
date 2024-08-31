@@ -1,8 +1,11 @@
 package com.survey.server.adapters.web.controller.v1;
 
+import com.survey.server.adapters.web.dto.AnswerDTO;
+import com.survey.server.adapters.web.dto.AnswersDTO;
 import com.survey.server.adapters.web.dto.SurveyDTO;
 import com.survey.server.domain.model.Survey;
 import com.survey.server.domain.service.SurveyService;
+import com.survey.server.infrastructure.queue.publisher.AnswerPublisher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,6 +25,9 @@ public class SurveyControllerTest {
     @Mock
     private SurveyService surveyService;
 
+    @Mock
+    private AnswerPublisher publisher;
+
     @InjectMocks
     private SurveyController surveyController;
 
@@ -36,6 +42,7 @@ public class SurveyControllerTest {
                         LocalDateTime.now(),
                         null,
                         false,
+                        List.of(),
                         List.of()
                 )
         );
@@ -57,6 +64,7 @@ public class SurveyControllerTest {
                 LocalDateTime.now(),
                 null,
                 false,
+                List.of(),
                 List.of()
         );
 
@@ -86,5 +94,14 @@ public class SurveyControllerTest {
     public void should_DeleteSurvey(){
         surveyController.deleteSurvey("id");
         verify(surveyService, times(1)).delete("id");
+    }
+
+    @Test
+    public void should_AnswerSurvey(){
+        AnswersDTO answersDTO = new AnswersDTO(List.of(new AnswerDTO("questionId", "answer")));
+
+        surveyController.answerSurvey("id", answersDTO);
+
+        verify(publisher, times(1)).send("id", answersDTO.toDomain());
     }
 }

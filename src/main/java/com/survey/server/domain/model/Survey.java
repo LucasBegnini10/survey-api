@@ -17,11 +17,12 @@ public class Survey {
     private LocalDateTime deletedAt;
     private Boolean isDeleted;
     private List<Field> fields;
+    private List<Answer> answers;
 
     public Survey() {
     }
 
-    public Survey(String id, String name, String description, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean isDeleted, List<Field> fields) {
+    public Survey(String id, String name, String description, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, Boolean isDeleted, List<Field> fields, List<Answer> answers) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -30,5 +31,6 @@ public class Survey {
         this.deletedAt = deletedAt;
         this.isDeleted = isDeleted;
         this.fields = fields;
+        this.answers = answers;
     }
 }

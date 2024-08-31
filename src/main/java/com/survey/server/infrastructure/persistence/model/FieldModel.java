@@ -28,7 +28,7 @@ public class FieldModel {
         this.type = field.getType();
         this.helper = field.getHelper();
         this.required = field.getRequired();
-        this.answer = AnswerModel.fromDomain(field.getAnswer());
+        this.answer = AnswerModel.fromDomain(field.getAnswers());
     }
 
     public static List<FieldModel> fromDomain(List<Field> fields){

@@ -4,7 +4,6 @@ import com.survey.server.domain.model.Survey;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -27,6 +26,7 @@ public class SurveyModel {
     private LocalDateTime deleted_at;
     private Boolean is_deleted;
     private List<FieldModel> fields;
+    private List<AnswerModel> answers;
 
     public SurveyModel(Survey survey){
         this._id = survey.getId();
@@ -37,6 +37,7 @@ public class SurveyModel {
         this.deleted_at = survey.getDeletedAt();
         this.is_deleted = survey.getIsDeleted();
         this.fields = FieldModel.fromDomain(survey.getFields());
+        this.answers = AnswerModel.fromDomain(survey.getAnswers());
     }
 
     public Survey toDomain(){
@@ -48,7 +49,8 @@ public class SurveyModel {
                 this.updated_at,
                 this.deleted_at,
                 this.is_deleted,
-                FieldModel.toDomain(this.fields)
+                FieldModel.toDomain(this.fields),
+                AnswerModel.toDomain(this.answers)
         );
     }
 }
